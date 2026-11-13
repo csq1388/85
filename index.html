@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>采购技委刷题 · 118题</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#f5f7fb;min-height:100vh;display:flex;justify-content:center;padding:12px;color:#1e293b}
+.app{max-width:640px;width:100%;background:#fff;border-radius:28px;box-shadow:0 20px 40px -12px rgba(0,20,40,.25);padding:20px 18px 26px;max-height:98vh;overflow-y:auto}
+h1{font-size:1.5rem;font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:4px;color:#0f172a}
+h1 small{font-size:.72rem;font-weight:400;background:#eef2ff;color:#4f46e5;padding:4px 10px;border-radius:40px;margin-left:auto}
+.subhead{display:flex;justify-content:space-between;align-items:center;color:#64748b;font-size:.85rem;margin-bottom:14px;border-bottom:1px solid #e2e8f0;padding-bottom:10px;flex-wrap:wrap;gap:6px}
+.progress-badge{background:#f1f5f9;padding:4px 12px;border-radius:30px;font-weight:500}
+.question-meta{display:flex;gap:10px;font-size:.78rem;margin-bottom:8px;flex-wrap:wrap}
+.module-tag{background:#e6f0ff;color:#2563eb;padding:4px 10px;border-radius:20px;font-weight:500}
+.type-tag{background:#f1f5f9;color:#475569;padding:4px 10px;border-radius:20px}
+.question-text{font-size:1.1rem;font-weight:600;line-height:1.55;margin:10px 0 16px;word-break:break-word}
+.options{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.option{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:16px;padding:12px 15px;font-size:.94rem;line-height:1.45;display:flex;align-items:flex-start;gap:10px;cursor:pointer;user-select:none;transition:.15s;word-break:break-word}
+.option:active{background:#eef2ff;border-color:#818cf8}
+.option-letter{font-weight:700;color:#4f46e5;min-width:22px}
+.option.selected{background:#eef2ff;border-color:#4f46e5}
+.option.correct{background:#e6f9ed;border-color:#10b981}
+.option.correct .option-letter{color:#059669}
+.option.wrong{background:#fee9e6;border-color:#ef4444}
+.option.wrong .option-letter{color:#b91c1c}
+.option.disabled{pointer-events:none;opacity:.85}
+.explanation{background:#f1f5f9;padding:11px 14px;border-radius:16px;font-size:.86rem;color:#334155;line-height:1.5;margin:4px 0 14px;border-left:4px solid #4f46e5;display:none;word-break:break-word}
+.explanation.show{display:block}
+.action-bar{display:flex;gap:10px;margin-top:6px}
+.btn{flex:1;padding:14px 6px;border-radius:30px;font-size:.94rem;font-weight:600;border:1.5px solid #e2e8f0;background:#fff;color:#334155;cursor:pointer;transition:.15s;text-align:center}
+.btn-primary{background:#4f46e5;border-color:#4f46e5;color:#fff;box-shadow:0 8px 14px -6px rgba(79,70,229,.4)}
+.btn-primary:active{background:#4338ca}
+.btn:disabled{opacity:.45;pointer-events:none}
+.btn-secondary{color:#4f46e5;border-color:#cbd5e1}
+.result-screen{text-align:center;padding:10px 0}
+.score-big{font-size:3.4rem;font-weight:800;color:#4f46e5;line-height:1.2;margin:8px 0 0}
+.score-sub{color:#64748b;margin-bottom:22px;font-size:.95rem}
+.result-stats{display:flex;justify-content:center;gap:24px;margin:18px 0 26px;flex-wrap:wrap}
+.stat-item{display:flex;flex-direction:column}
+.stat-num{font-size:1.6rem;font-weight:700}
+.stat-label{font-size:.78rem;color:#64748b}
+.finish-actions{display:flex;gap:10px;flex-wrap:wrap}
+.badge-nav{display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:6px}
+.question-index{font-size:.85rem;color:#64748b;background:#f1f5f9;padding:5px 14px;border-radius:30px}
+.note{font-size:.72rem;color:#94a3b8;text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 题库（来自表格118题） ==========
+const rawData = [
+["采购材料","以下材料中，最易吸湿的是:","PP","ABS","PA","PE","C","塑料原材应用"],
+["采购材料","吸塑盒常用PET胶片环保标识？","2号","3号","4号","1号","D","包材应用"],
+["采购材料","纸箱K=K材质，耐破强度Kpa，边压强度N/m检测测标准()","耐破强度Kpa≧1250，边压强度N/m≧4200","耐破强度Kpa≧1200，边压强度N/m≧4200","耐破强度Kpa≧1150，边压强度N/m≧4200","所有选项都对","C","包材应用"],
+["采购材料","纸箱的计算公式单位为何?","L=(长+宽+5)*(宽+高+3)*2*平方米单价/10000(CM)","L=(长+宽+4)*(宽+高+2)*2*平方米单价/10000(CM)","L=(长+宽+3)*(宽+高+2)*2*平方米单价/10000(CM)","L=(长+宽+1)*(宽+高+1)*2*平方米单价/10000(CM)","C","包材应用"],
+["采购材料","普通隔板的计算公式单位为CM？","L=(长+3)*(宽+3)*平方米单价/10000","L=(长+2)*(宽+2)*平方米单价/10000","L=(长+1)*(宽+1)*平方米单价/10000","L=长*宽*平方米单价/10000","C","包材应用"],
+["采购材料","1MΩ表示:","1000Ω","1000KΩ","10000Ω","100KΩ","B","电子基础"],
+["采购材料","以下哪种线材外被是无卤料?","TPE","PVC","FEP","SR-PVC","A","线材应用"],
+["逻辑题","评审分级为D级之供货商，物料停用/禁用，应视情况作出处理：a如是客户指定供货商，则需通报客户，由客户给出处理意见；b评定为D级供货商，如是单一供货商，品保部SQE与采购应限定期限要求改善，如果下一季度评定为C级，列为观察厂商。<br>如果以上基准得到严格的执行，那么以下诸断定中，哪一项是正确的。()","评审分级为D级供货商，物料立即停用/禁用","评审分级为D级供货商，如果是客户指定供货商，无需改善","D级供货商改善为C级之后，不需要继续改善。","所有选项都错","D","逻辑题"],
+["采购流程","一般贸易进口料件属性是:","保税料件","非保税料件","保税与非保税都可以","视公司制度而定","B","国际贸易"],
+["采购流程","适合水上运输方式的国际贸易术语是:()","FOB","CIF","CFR","A+B+C","D","国际贸易"],
+["采购流程","关于保税进口，以下说法错误的是:","保税进口不用缴税","保税进口需严格按照海关备案的合同手册执行","保税进口需缴纳增值税","保税进口的物料必须在规格的时间内到海关核销","C","国际贸易"],
+["采购流程","以下属于完税交易条款的是:","FOB","FCA","CIF","EXW","C","国际贸易"],
+["采购流程","CIP和CPT贸易术语下，负责运输的当事方分别为:","卖方/卖方","卖方/买方","买方/买方","买方/卖方","A","国际贸易"],
+["采购流程","外来人员参观板头厂产线，来访单需签核至()?","课长","经理","副总经理","总经理","C","公司作业流程"],
+["采购环保知识","得意对包装材料的CR+6(六价铬)管控值是:","小于1000PPM","小于50PPM","小于10PPM","不能含有","D","公司质量管理"],
+["采购环保知识","得意对Br溴+Cl氯的管控值是:","小于1500PPM","小于1000PPM","小于900PPM","不能含有","C","公司质量管理"],
+["逻辑题","有12个一样的容器，7g、2g砝码各一个，天平一只，请问利用这些物品最少需要用到天平几次就可以将140g的抛光粉分成50g、90g各一份（   ）","3次","4次","5次","6次","A","因为140=70+70，70=35+35，15+7=20+2，所以最少使用三次就可以分好"],
+["IE知识","公司在进行MCT改善检讨可以从哪方面着手进行()","合并作业","并行作业","加快速度","所有选项都对","D",""],
+["IE知识","下列不属于防呆的收益有（）","强化作业程序和顺序","防止不良品产生","提升作业效率","消除不经意的错误","C",""],
+["IE知识","下列不属于防错的十大原理是（）","效率原理","保险原理","顺序原理","警告原理","A",""],
+["IE知识","下列不属于动作经济原则的基本原则的是（）","减少动作数量","追求动作平衡","改善操作环境","缩短动作距离","C",""],
+["IE知识","动作分析改善的最后步骤为（）","改善效果确认","标准化","改善水平展开","经验总结","B",""],
+["IE知识","下列不属于现场改善基本原则的是（）","改善无止境","量力而行，知足而长乐","抛弃道统故有理念","5WHY","B",""],
+["IE知识","IE七大手法重点是（）","问题的分析","重点的选择","问题解决方案拟定","效果确认","C",""],
+["IE知识","在动作经济原则中，“尽量解除手的动作，而以夹具或脚踏工具代替”，这是关于()的原则。","人体运用","工作地布置","工具设备","作业设计","C",""],
+["IE知识","ECRS中的E表示()","取消","合并","重排","简化","A",""],
+["IE知识","以下属于作业时间长的工序改善方案的是（）","把可以分担的作业分割","从其他工序移来一部份作业","增加每个人的作业量","消除此道工序","A",""],
+["IE知识","下列哪些改善没有应用到了“动作经济原则”（）","设定U型生产线","使其可以在正常作业范围进行作业","安装警报器","将两个以上的工具组合成一个","C",""],
+["IE知识","以下哪些选项没有应用到动作经济原则的是（）","能够对面作业的成形机进行字型作业","设定脚踏板","可以在正常作业范围进行作业","长期单手作业","D",""],
+["IE知识","更换作业程序应尽可能改善外部操作程序，下列那些不属于改善外部操作程序()","静心等候","实施3S","尽量消除搬运","制定标准作业书","A",""],
+["IE知识","下列不属于比较经济的动作的是︰（）","动作能予规律化","双手可反向运动，而不可同向运动","利用惯性、重力、自然力等，尤其尽量利用动力装置","尽可能利用舒适的姿势工作","B",""],
+["IE知识","下列选项中不属于IE七大手法的是（）","双手法","防呆法","流程法","层别法","D",""],
+["IE知识","下列不属于动作浪费的是（）","走动","左右手交换","库存","单手空闲","C",""],
+["IE知识","被丰田称为第八大浪费的是（）","过度生产","库存","缺陷","未被充分使用的员工创造力","D",""],
+["IE知识","上、下车架由于长时间存放造成关键部位生锈而返修，这种情况属于（）","缺陷的浪费","搬运的浪费","库存的浪费","增值作业","C",""],
+["IE知识","根据清除浪费的基本思路，作业可分为（）","无功作业浪费作业纯作业","浪费作业附加作业无功作业","浪费作业纯作业附加作业","无功作业有功作业纯作业","C",""],
+["IE知识","以下哪项不属于消除生产过剩的对策范畴（）","小批量生产","与顾客充分沟通","U字型设备配置","均衡化生产","B",""],
+["IE知识","以下哪项可能会产生加工本身的无效劳动（）","夹具工具不完善","提前生产","生产布局不合理","大批量生产","A",""],
+["IE知识","属于动作上浪费的是（）","生产过多","生产过早","效率不高的姿势","返工","C",""],
+["IE知识","不属于库存浪费的是（）","成品积压","半成品生产过剩","库存管理费用","次品增加","D",""],
+["IE知识","针对搬运的浪费，可采取以下哪种对策改善。（）","确定最佳搬运次数","U字型设备配置","小容量化","所有选项都对","D",""],
+["IE知识","以下不属于搬运或移动改善的关键点是（）","减少搬运工序","调整工序顺序","减少搬运工时数","改善作业布局","B",""],
+["IE知识","下列哪些作业是有不能消除浪费的是（）","在机器前面进行监视","加工完毕后机器自动停止","加工完毕后机器自动取出产品","实现自动化安装","A",""],
+["IE知识","（）浪费是万恶之源？","搬运浪费","库存浪费","不良浪费","等待浪费","B",""],
+["连接器手册","接触弹片在连接器上具有什么作用？（     ）","在组件之间提供一条导通电讯的路径","产生形成并维持接触弹片接触面的压力","形成稳固的接触","所有选项都是","D","接触弹片在连接器上具有以下3个作用：在组件之间提供一条导通电讯的路径、产生形成并维持接触弹片接触面的压力、形成稳固的接触"],
+["连接器手册","以下材料适用于SMT制程的是？（      ）","LCP","PA46","PC","所有选项都对","A","SMT制程中塑料在焊接中暴露的时间和温度至关重要"],
+["连接器手册","某外壳产品需要高透性，良好热冲击性能以及尺寸稳定性，该选用何种材料？（      ）","PS","PC","PPS","PBT","B","PC料具有天然阻燃性，良好冲击性，尺寸稳定性和透明性"],
+["连接器手册","增加接触正压力与以下哪项呈负相关？（     ）","耐久","插拔力","疲乏","磨损","A","大体上，随着接触正压力的升高，耐久性将下降"],
+["连接器手册","永久性连接包括机械方式的和冶金方式的。以下哪种不属于冶金方式连接？（     ）","低温焊","铜焊","高温焊","包覆连接","D","机械方式连接包括卷曲式，弃皮式，压入式和包覆技术。冶金方式连接包括低温焊、铜焊和高温焊连接"],
+["连接器手册","以下哪项不作为电线与电缆中导体基体金属材料？（        ）","铜","铜合金","银","铝","C","由于铜、铜合金和铝在导电性、拉伸强度、重量和成本方面的组合特性优良，因此它们用于Cable导体"],
+["连接器手册","以下哪项不是降低温升的方式？（     ）","使用具有高导电率的材料","使用具有高导热率的材料","缩短电流通过端子路径的长度","减小端子的横截面积","D","必须把温升降低至最小，因而必须增大电流的容量，端子的体电阻也必须降到最小"],
+["连接器手册","以下哪项不是导致和加速连接器腐蚀/氧化薄膜形成过程的主要环境因素？（     ）","湿度","温度","腐蚀性颗粒或气体微粒","摩擦","D","湿度是导致和加速腐蚀/氧化薄膜形成进程的三个主要因素之一，其它两个因素是温度及腐蚀性的颗粒或气体微粒"],
+["连接器手册","绝缘电阻IR是用于评估连接器哪个结构的性能？（     ）","接触界面","接触涂层","接触弹性组件","塑料本体","D","绝缘电阻（IR）被用来作为塑料housing 性能的评估"],
+["连接器手册","以下哪项用于评估连接器电性能稳定性？（     ）","低接阻抗","绝缘阻抗","耐电压","温升","A","电阻（LLCR）被用来作为接触表面和电性能稳定性的评估"],
+["连接器手册","LOTES高频测试仪器平台的测试连接器界面是属于什么类型： (      )","BNC类型","SMA类型","TNC类型","所有选项都对","B","参考连接器手册"],
+["连接器手册","接触界面形态依靠是：  (       )","表面粗糙度","接触界面上的压力","接触表面上的几何形状","所有选项都对","D","连接器手册"],
+["连接器手册","接触界面的微观结构决定了电连接器的：  (       )","电子性能","机械性能","电子性能和机械性能","环境性能","C","连接器手册"],
+["品保基础","方差分析简称ANOVA，又称“变异数分析”，用方差分析进行数据分析前数据需满足的前提条件不包括？","数据独立","正态性","均值相等","方差相等","C","统计基础"],
+["品保基础","6σ制程质量水平，长期表现为？","3.4ppm","233ppm","6.210ppm","308.537ppm","A","6σ"],
+["品保基础","五大检验中，正态性检验P值默认？","0.05","0.1","0.08","0.03","A","统计基础"],
+["品保基础","适合单因子方差分析的案件是？","同一料号两台机生产的良率比较","两台设备相同的三个参数比较舌片的强度","固定的点焊机不同电流大小对焊接强度的评价","所有选项都错","C","统计基础"],
+["品保基础","回归分析根据因变量和自变量的关系分为线性和非线性回归,如下案例可以理解为线性回归的是？","加速度随着时间的变化","自由落体速度随着时间的变化","插拔力随着次数的影响","所有选项都对","B","统计基础"],
+["品保基础","流程图的自变量来源可透过何种方法取得？","头脑风暴法","鱼骨图(6M)","操作员经验","所有选项都对","D","统计基础"],
+["品保基础","在SixSigma中我们常利用数学函数Y=f(x)代表输出与输入函数的关系，对应在流程图上Y代表的是？","自变量","因变量","两者皆是","两者皆非","B","6σ"],
+["品保基础","MSA量测系统分析中，不同操作者以相同量具、量测一个零件的一个特性的量测平均值的变异？","再现性","重复性","稳定性","GRR","A","MSA"],
+["品保基础","想要比较某种减肥药物的疗效，选定了10个人进行试验，收集了每个人服用减肥药后的体重数据，用何种检验方法？","单样本T检验","单样本Z检验","双样本T检验","配对T检验","D","统计基础"],
+["品保基础","LOTES要比较A供货商的材料厚度和B供货商材料厚度用？","单样本T检验","单样本Z检验","双样本T检验","配对T检验","C","统计基础"],
+["品保基础","回归分析，模型汇总中R-sq理解的意思正确的是？","代表“多少”输出变异总量可由回归模型所解释，值越高模型更可信","介于0~1之间,越接近1,回归拟合效果越好","一般认为超过0.8的模型拟合优度比较高","所有选项都对","D","统计基础"],
+["冲压基础","以下属于成型工艺的是（     ）","冲孔","落料","刺破","整形","D",""],
+["冲压基础","导料板的作用描述不正确的是（     ）","压住下模零件","限制浮料高度","导正料带","防止产品翻料","D",""],
+["塑胶基础","冷流道产品局部烧焦的原因 （       ）","烧焦处困气造成烧焦","排气孔堵死","排气槽太少","所有选项都对","D","产品发生烧焦后对模具的处理方案"],
+["塑胶基础","从PVT特性曲线中不能判断（   ）","体积随温度的变化","体积随压力的变化","是否为结晶性材料","温度随压力的变化","D","成型材料知识"],
+["塑胶基础","注塑成型过程中产品表面产生熔接痕，可能存在的原因(       )","料流速度过慢，浇口面积过小，长度过大，导致进料阻力增加","模具排气不良，熔融塑料在填充模具型腔时，同时也将型腔中的气体排出，在熔料流动末端形成反作用力增大，两股料流交汇困难","冷却时间过快，模具温度太低，模具局部温度不均，导致料流交汇处出现熔接痕","所有选项都对","D","注塑熔接痕产生原因"],
+["塑胶基础","造成主体Pin孔弧形的主要因素是  （  ）","Pin孔X/Y方向胶位厚度差异太大","模具水路设计不匀","顶针排位不匀","进胶点位置不当","A","模具设计零件尺寸公差"],
+["塑胶基础","注塑机台选择应考虑哪些因素（      ）","机台最大柱内尺寸","锁模力和射出压力/速度","机台最大/最小模厚/ 机台射胶量","所有选项都对","D","排布产品时对注塑机选型"],
+["品保基础","Ca/Cp/CPk之间的概念关系：","Cpk=Cp(1-Ca)","Cpk=Cp(2-Ca)","Cpk=Cp(3-Ca)","Cpk=Cp(4-Ca)","A","出自统计制程管制SPC培训教材"],
+["研发基础","产品弹高端子在公母座对插时，不是导致跪pin的因素（        ）","端子弹高过大","端子接触面R角过小","端子料宽太细","端子接触面R角过大","D","连接器手册"],
+["研发基础","当上极限偏差或下极限偏差为零时，在图样上_____","必须标出零值","不用标出零值","标或不标零值皆可","视具体情况而定","A","参考《公差教材》"],
+["研发基础","为了符合IR焊接要求，设计连接器如下那种塑料料符合要求：（　）","PBT","LCP","ABS","PA66","B",""],
+["研发基础","端子卡点尺寸为1.94+/-0.02，塑料pin孔尺寸为1.88+/-0.02，两者的配合关系为：","间隙配合","过盈配合","过渡配合","不相关","B",""],
+["研发基础","连接器进行测试的目的是什么?","评定设计能力;作为失效模式分析的工具","显示出本领域中的期望性能","评定产品对一般的机能失效的敏感度","所有选项都对","D","参照连接器设计手册"],
+["研发基础","灌胶切片的作用是(       )。","辅助对产品的内部结构作结构分析用","分析产品的成分用","做产品结构填充用","配合塑胶作CAE分析用","A","参考《灌胶切片培训》"],
+["电镀基础","前处理腐饩底材过度造成镀层：","表面更加光滑","镀层表面粗糙，发白","结晶会更加细致","所有选项都对","B",""],
+["电镀基础","以下关于前处理说法正确的是：","每一个处理工站药水都要每周更换一次","每一个前处理工站都需有超音波发生器","前处理包括活化工站","所有选项都错","C",""],
+["品保基础","关于正向力与产品结构的关系描述正确的是（）","正向力与产品的厚度成正比关系","正向力与产品的宽度成正比关系","正向力与产品的长度成反比关系","正向力与产品的杨氏模量成反比关系","B","正向力F=EWDT3/4L3,正向力与产品的杨氏模量，宽度，配合干涉量，厚度的立方成正比关系，与长度的立方成反比关系"]
+];
+
+// 去重（按题干+答案）
+const seen = new Set();
+const questions = [];
+rawData.forEach((r, i) => {
+  const [module, q, a, b, c, d, ans, exp] = r;
+  const key = q + '||' + ans;
+  if (seen.has(key)) return;
+  seen.add(key);
+  questions.push({ id: questions.length + 1, module: module || '综合', question: q, options: [a,b,c,d].map(x=>x||''), answer: ans.toUpperCase(), explanation: exp || '' });
+});
+
+// ========== 应用逻辑 ==========
+let currentIndex = 0;
+let userAnswers = new Array(questions.length).fill(null);
+let answered = new Array(questions.length).fill(false);
+let score = 0;
+const appEl = document.getElementById('app');
+
+function render() {
+  if (currentIndex >= questions.length) { renderResult(); return; }
+  const q = questions[currentIndex];
+  const selected = userAnswers[currentIndex];
+  const isAnswered = answered[currentIndex];
+
+  let optionsHtml = '';
+  q.options.forEach((opt, idx) => {
+    const letter = String.fromCharCode(65 + idx);
+    let cls = 'option';
+    if (isAnswered) {
+      cls += ' disabled';
+      if (letter === q.answer) cls += ' correct';
+      else if (selected === letter) cls += ' wrong';
+    } else if (selected === letter) {
+      cls += ' selected';
+    }
+    optionsHtml += `<div class="${cls}" data-letter="${letter}">
+      <span class="option-letter">${letter}</span>
+      <span class="option-text">${opt}</span>
+    </div>`;
+  });
+
+  const expHtml = isAnswered ? `<div class="explanation show"><strong>📘 解析：</strong>${q.explanation || '略'}</div>` : `<div class="explanation"></div>`;
+  const isLast = currentIndex === questions.length - 1;
+  const nextText = isLast ? '完成挑战' : '下一题';
+
+  appEl.innerHTML = `
+    <h1>📚 采购技委 <small>${questions.length}题</small></h1>
+    <div class="subhead">
+      <span>轻松刷题 · 微信分享</span>
+      <span class="progress-badge">${currentIndex + 1} / ${questions.length}</span>
+    </div>
+    <div class="card">
+      <div class="question-meta">
+        <span class="module-tag">${q.module}</span>
+        <span class="type-tag">单选题</span>
+      </div>
+      <div class="question-text">${q.question}</div>
+      <div class="options" id="optionsContainer">${optionsHtml}</div>
+      ${expHtml}
+      <div class="action-bar">
+        <button class="btn btn-secondary" id="prevBtn" ${currentIndex === 0 ? 'disabled' : ''}>上一题</button>
+        <button class="btn btn-primary" id="nextBtn" ${!isAnswered ? 'disabled' : ''}>${nextText}</button>
+      </div>
+      <div class="badge-nav">
+        <span class="question-index">第 ${currentIndex + 1} 题</span>
+        <span style="font-size:.75rem;color:#94a3b8;">点击选项即可查看解析</span>
+      </div>
+    </div>
+    <div class="note">✨ 共 ${questions.length} 题，刷完查看成绩</div>
+  `;
+
+  document.querySelectorAll('.option').forEach(el => {
+    el.addEventListener('click', () => {
+      if (answered[currentIndex]) return;
+      const letter = el.dataset.letter;
+      userAnswers[currentIndex] = letter;
+      answered[currentIndex] = true;
+      if (letter === q.answer) score++;
+      render();
+    });
+  });
+
+  document.getElementById('prevBtn')?.addEventListener('click', () => {
+    if (currentIndex > 0) { currentIndex--; render(); }
+  });
+  document.getElementById('nextBtn')?.addEventListener('click', () => {
+    if (currentIndex < questions.length - 1) { currentIndex++; render(); }
+    else { renderResult(); }
+  });
+}
+
+function renderResult() {
+  const total = questions.length;
+  const pct = Math.round((score / total) * 100);
+  let comment = pct >= 90 ? '🏆 太强了，采购专家！' : pct >= 75 ? '👍 不错哦，再巩固一下' : pct >= 60 ? '📖 及格啦，继续加油' : '💪 别灰心，多刷几遍';
+  appEl.innerHTML = `
+    <div class="result-screen">
+      <h1 style="justify-content:center;">🎉 挑战完成</h1>
+      <div class="score-big">${score} <span style="font-size:1.8rem;color:#94a3b8;">/ ${total}</span></div>
+      <div class="score-sub">${comment}</div>
+      <div class="result-stats">
+        <div class="stat-item"><span class="stat-num" style="color:#10b981;">${score}</span><span class="stat-label">正确</span></div>
+        <div class="stat-item"><span class="stat-num" style="color:#ef4444;">${total - score}</span><span class="stat-label">错误</span></div>
+        <div class="stat-item"><span class="stat-num" style="color:#4f46e5;">${pct}%</span><span class="stat-label">正确率</span></div>
+      </div>
+      <div class="finish-actions">
+        <button class="btn btn-secondary" id="restartBtn">重新刷题</button>
+        <button class="btn btn-primary" id="shareBtn">分享给朋友</button>
+      </div>
+      <div class="note" style="margin-top:20px;">点击分享可复制文案发给微信好友</div>
+    </div>
+  `;
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    currentIndex = 0; userAnswers.fill(null); answered.fill(false); score = 0; render();
+  });
+  document.getElementById('shareBtn').addEventListener('click', () => {
+    const text = `我在「采购技委刷题」中答对了 ${score}/${total} 题，正确率 ${pct}%！你也来试试吧～`;
+    if (navigator.share) {
+      navigator.share({ title: '采购技委刷题', text }).catch(()=>{});
+    } else {
+      navigator.clipboard.writeText(text).then(()=>alert('分享文案已复制，去微信粘贴给朋友吧！')).catch(()=>alert('请手动复制：'+text));
+    }
+  });
+}
+
+render();
+</script>
+</body>
+</html>
